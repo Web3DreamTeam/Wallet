@@ -1,9 +1,10 @@
 import React from 'react';
 import CredentialPicker from './CredentialPicker';
-import { VStack } from '@chakra-ui/react';
+import { VStack,Center } from '@chakra-ui/react';
 
 const CredentialPickers = ({ credentials, onToggle, handleAddClaim, selectedCredentials }) => {
   return (
+    <Center  w='full' h='full' ml={8} mt={4}>
     <VStack spacing={4}>
       {credentials.map((credential, index) => (
         <CredentialPicker
@@ -15,6 +16,7 @@ const CredentialPickers = ({ credentials, onToggle, handleAddClaim, selectedCred
         />
       ))}
     </VStack>
+    </Center>
   );
 };
 

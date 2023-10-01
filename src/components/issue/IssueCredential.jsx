@@ -1,43 +1,82 @@
 
-import { Box, Button, Stack } from '@chakra-ui/react';
+import { VStack, Button, Stack, Text, Center } from '@chakra-ui/react';
 import { saveCredential } from "../../utils/ssiService"
-import { useContext, useState } from "react"
+import { useContext } from "react"
 import { AppContext } from "../../AppContext"
 import jwt_decode from "jwt-decode";
 import ParticipantCard from "../cards/ParticipantCard";
 import CredentialCard from "../cards/CredentialCard";
+import { useNavigate } from 'react-router-dom';
+import { useToast } from "@chakra-ui/react"
 
-export const IssueCredential = ({request, setCred}) => {
-    const { context, setContext, setUpdate } = useContext(AppContext)
+export const IssueCredential = ({request}) => {
+    const { did, setUpdate } = useContext(AppContext)
+    const toast = useToast()
+    const navigate = useNavigate()
 
     const handleAccept = async () => {
-        await saveCredential(request.cred)
-        setCred(undefined)
+        await saveCredential(did, request.cred)
         setUpdate(upd => !upd)
-        
-
+        navigate("/home")
+        toast({
+            title: "Credential Added",
+            description: "The credential has been added to your wallet",
+            status: "success",
+            duration: 5000, // duration of the toast
+            isClosable: true,
+          });
     }
 
     const handleReject = () => {
-        setCred(undefined)
+        navigate("/home")
+        toast({
+            title: "Credential Rejected",
+            description: "The credential was not added to your wallet",
+            status: "failure",
+            duration: 5000, // duration of the toast
+            isClosable: true,
+          });
     }
 
+
     return (
-        <Box>
-            <h1>ISSUER</h1>
-            <ParticipantCard props = {request.issuer}/>
-            <h1>Credential Preview</h1>
-            <CredentialCard cred={jwt_decode(request.cred)} />
-            <Stack spacing={4} direction='row' align='center'>
-                <Button colorScheme='teal' size='md' onClick={handleReject}>
-                    Reject
-                </Button>
-                <Button colorScheme='teal' size='md' onClick={handleAccept}>
-                    Accept
-                </Button>
-            </Stack>
+        <Center w='full' h='50rem'>
+            <VStack>
+                <Text
+                    fontSize='2xl'
+                    as='b'
+                    align='left'
+                    marginLeft='1.5rem'
+                    marginTop='1rem'
+                    font-family= '-apple-system-headline'
+                >Issuer</Text>
+
+
+                <ParticipantCard props = {request.issuer}/>
+                
+                <Text
+                    fontSize='2xl'
+                    as='b'
+                    align='left'
+                    marginLeft='1.5rem'
+                    marginTop='1rem'
+                    font-family= '-apple-system-headline'
+                >Credential Preview</Text>
+
+                <CredentialCard cred={jwt_decode(request.cred)} />
+                <Stack spacing={4} direction='row' align='center'>
+                    <Button colorScheme='teal' size='md' onClick={handleReject}>
+                        Reject
+                    </Button>
+                    <Button colorScheme='teal' size='md' onClick={handleAccept}>
+                        Accept
+                    </Button>
+                </Stack>
+            
+            </VStack>
+
+        </Center>
         
-        </Box>
     )
 
 }

@@ -17,6 +17,15 @@ import {
   const CollapsableCredentialCard = (props) => {
     const [showAll, setShowAll] = useState(false);
 
+    if(!props.isSelected && showAll) setShowAll(false)
+
+    let width = "358px"
+    let height = "226px"
+    if(Object.prototype.hasOwnProperty.call(props,'presentation')){
+      width="320px"
+      height="202px"
+    } 
+
     const fields = Object.keys(props.myCredential.cred.vc.credentialSubject).map((key, index) => {
       if(key == '_sd'){
         return Object.keys(props.myCredential.disclosed).map((_key,_index) => {
@@ -25,7 +34,7 @@ import {
           fieldName={_key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())} 
           fieldValue={props.myCredential.disclosed[_key]}
           isDisabled={!props.isSelected}
-          addClaim={props.hasOwnProperty('addClaim') ? props.addClaim : ()=>{}}
+          addClaim={Object.prototype.hasOwnProperty.call(props,'addClaim') ? props.addClaim : ()=>{}}
           /> 
         })
       
@@ -50,7 +59,8 @@ import {
     return (
       <Box
       maxW="md"
-      width="sm"
+      width={width}
+      minHeight={height}
       borderWidth="1px"
       borderRadius="lg"
       overflow="hidden"
@@ -65,7 +75,7 @@ import {
       }}
       >
         <VStack spacing={4} align="start">
-          <Text fontSize="xl" fontWeight="bold">
+          <Text fontSize="xl" fontWeight="bold" font-family= '-apple-system-headline'>
             {props.myCredential.cred.vc.type[1]}
           </Text>
 
@@ -75,20 +85,27 @@ import {
           </Tooltip>
         </Box>
           {showAll ? fields : fields.slice(0, 2)}
-          <Flex justify="center" width="full" mt={2}>
-          <IconButton 
-            aria-label="Toggle Fields"
-            size="sm" 
-            variant="ghost"
-            color="white"
-            _hover={{bg:'none'}}
-            onClick={() => {
-              setShowAll(!showAll)
-              if(props.hasOwnProperty('onlyCard')) props.setOnlyCard(props.onlyCard === props.index ? null : props.index)
-            }}
-            icon={showAll ? <ChevronUpIcon /> : <ChevronDownIcon />}
-          />
+          
+          {props.isSelected ? 
+            <Flex justify="center" width="full" mt={2}>
+            <IconButton 
+              aria-label="Toggle Fields"
+              size="sm" 
+              variant="ghost"
+              color="white"
+              _hover={{bg:'none'}}
+              onClick={(e) => {
+                setShowAll(!showAll)
+                e.stopPropagation();
+                // if(Object.prototype.hasOwnProperty.call(props,'onlyCard')){
+                //   if(props.onlyCard !== props.index) props.setOnlyCard(props.index)
+                // }
+              }}
+              icon={showAll ? <ChevronUpIcon /> : <ChevronDownIcon />}
+            />
           </Flex>
+          :<></>
+          }
           
         </VStack>
       </Box>
@@ -108,7 +125,7 @@ import {
   
     return (
         <HStack width="full" justifyContent="space-between">
-          <Text wordWrap="break-word">
+          <Text wordWrap="break-word" font-family= '-apple-system-headline'>
             {isVisible ? `${fieldName}:  ` : '••••••••:  \n'}
             {isVisible ? fieldValue : '••••••••'}
           </Text>
@@ -131,7 +148,7 @@ import {
     
       return (
           <VStack width="full" justifyContent="space-between" align="left">
-            <Text wordWrap="break-word">
+            <Text wordWrap="break-word" font-family= '-apple-system-headline'>
               {fieldName}:{'  '}{fieldValue}
             </Text>
           </VStack>

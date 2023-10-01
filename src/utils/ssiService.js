@@ -1,16 +1,14 @@
 import axios from "axios";
 
+export const registerOrLogin = async (username, password) => {
+    let response = await axios.post(process.env.REACT_APP_CLOUD_API_IP+`/login`, {
+        username: username,
+        password: password
+    })
 
-export const MY_DID = "did:ethr:maticmum:0x185A63F51cbE788FaDb2992e73113B0bF1F56344"
-
-export const fetchContext = async () => {
-    let credentials = await getCredentials()
-
-    return {
-        credentials: credentials.credentials,
-        did: MY_DID
-    }
+    return response.data.did
 }
+
 
 export const handleQR = async (decodedText) => {
     let result = await axios.get(decodedText)
@@ -67,11 +65,11 @@ const handlePresentationRequest = async (qrdata) => {
 
 }
 
-export const handlePresentationSubmission = async (request, jwts, claims=undefined) => {
+export const handlePresentationSubmission = async (did, request, jwts, claims=undefined) => {
 
 
     let body = {
-        did: MY_DID,
+        did: did,
         targetDID: request.verifier,
         credentials: jwts,
         claims: claims,
@@ -86,36 +84,35 @@ export const handlePresentationSubmission = async (request, jwts, claims=undefin
 
 }
 
-export const handleIssuanceSubmission = async (request) => {
-
-    let body = {
-        did: MY_DID,
-        vc: request.cred,
-    }
-
-
-    const response = await axios.post(process.env.REACT_APP_CLOUD_API_IP+"/save", body)
-
-    const result = response.data
-    return result
-}
-
-export const getCredentials = async () => {
+export const getCredentials = async (did) => {
     //TODO
-    let path = process.env.REACT_APP_CLOUD_API_IP+`/get-credentials/${MY_DID}`
-    console.log(path)
+    let path = process.env.REACT_APP_CLOUD_API_IP+`/get-credentials/${did}`
     let response = await axios.get(path)
 
     let result = response.data
     return result
 }
 
-export const saveCredential = async (vc) => {
+export const saveCredential = async (did, vc) => {
 
     let path = process.env.REACT_APP_CLOUD_API_IP+`/save`
 
     let body = {
-        'did' : MY_DID,
+        'did' : did,
+        'vc' : vc
+    }
+    let response = await axios.post(path, body)
+
+    return response.data
+}
+
+export const deleteCredential = async (did, vc) => {
+
+    let path = process.env.REACT_APP_CLOUD_API_IP+`/delete`
+
+    
+    let body = {
+        'did' : did,
         'vc' : vc
     }
     let response = await axios.post(path, body)

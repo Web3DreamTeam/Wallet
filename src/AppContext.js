@@ -1,41 +1,41 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { fetchContext } from './utils/ssiService.js';
+import { getCredentials } from './utils/ssiService.js';
 
 // Initial Context
 
 let defaultContext = {
-    context: {
         credentials: [],
         did: ""
-    },
-    setContext: (auth) => {}
 }
 
 const AppContext = createContext(defaultContext);
 
 
 const AppContextProvider = ({children}) => {
-  const [context, setContext] = useState(defaultContext.context);
+  const [did, setDid] = useState("")
+  const [credentials, setCredentials] = useState([])
   const [update, setUpdate] = useState(false)
 
   useEffect(() => {
     // Fetch context and set it to state
-    const fetchAndSetContext = async () => {
+    const fetchAndSetCredentials = async () => {
       try {
-        const context = await fetchContext();
-        setContext(context);
+          let creds = (await getCredentials(did)).credentials
+          console.log("trying to grab creds", creds)
+          setCredentials(creds)
       } catch (error) {
         // Handle error
         console.error(error);
       }
     };
 
-    fetchAndSetContext();
-  }, [update]);
+    fetchAndSetCredentials();
+  }, [update, did]);
+
 
   return (
     // Provide the state as context value
-    <AppContext.Provider value={{context, setContext, setUpdate}}>
+    <AppContext.Provider value={{did, setDid, credentials, setCredentials, setUpdate}}>
       {children}
     </AppContext.Provider>
   );

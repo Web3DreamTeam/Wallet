@@ -1,15 +1,19 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from "../../AppContext"
-import { Box, Button, VStack, Text, Collapse } from '@chakra-ui/react';
+import { Box, Button, VStack, Text, Collapse, Center } from '@chakra-ui/react';
 import CredentialPickers from './CredentialPickers';
 import ParticipantCard from '../cards/ParticipantCard';
 import { handlePresentationSubmission } from '../../utils/ssiService';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@chakra-ui/react';
 
-const PresentationRequest = ({request, setCred}) => {
+const PresentationRequest = ({request}) => {
   // Aggregate all credentials by type
-  const { context, setContext, setUpdate } = useContext(AppContext)
+  const { did, credentials } = useContext(AppContext)
+  const navigate = useNavigate()
+  const toast = useToast()
 
-  let creds = context.credentials
+  let creds = credentials
   let credentialsByType = {}
   request.credentialTypes.forEach(type => {
     credentialsByType[type] = creds.filter((cred) => cred.cred.vc.type.indexOf(type) !== -1)
@@ -50,15 +54,38 @@ const PresentationRequest = ({request, setCred}) => {
     //props.request.id
     console.log('Selected Credentials:', selectedCredentials);
     console.log('Selected Claims: ', claims)
-    await handlePresentationSubmission(request, selectedCredentials.map((cred)=> cred.jwt), claims)
-    setCred(undefined)
+    await handlePresentationSubmission(did, request, selectedCredentials.map((cred)=> cred.jwt), claims)
+    navigate("/home")
+    toast({
+      title: "Success",
+      description: "Your Presentation has been sent to the verifier",
+      status: "success",
+      duration: 5000, // duration of the toast
+      isClosable: true,
+    });
   };
 
   return (
-     <Box>
-    <h1>VERIFIER</h1>
-    <ParticipantCard props = {request.verifier}/>
-      <VStack spacing={4}>
+    <Center w='full' h='full'>
+    <VStack>
+        <Text
+            fontSize='2xl'
+            as='b'
+            marginTop='1rem'
+            font-family= '-apple-system-headline'
+        >Verifier</Text>
+
+
+        <ParticipantCard props = {request.verifier}/>
+        
+        <Text
+            fontSize='2xl'
+            as='b'
+            marginTop='1rem'
+            font-family= '-apple-system-headline'
+        >Choose Credentials</Text>
+
+      <VStack spacing={4} pb={24}>
         {Object.keys(credentialsByType).map((type) => (
             <Box key={type} width="full">
             <Text
@@ -83,16 +110,15 @@ const PresentationRequest = ({request, setCred}) => {
         ))}
     </VStack>
       <Button
-        mt={4}
         colorScheme="blue"
         onClick={handleSendPresentation}
         position="fixed"
-        bottom="0"
-        right="0"
+        bottom="10"
       >
         Send Presentation
       </Button>
-    </Box>
+      </VStack>
+    </Center>
   );
 };
 

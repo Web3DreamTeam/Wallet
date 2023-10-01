@@ -12,7 +12,7 @@ import {
   const ParticipantCard = ({ did, verified }) => {
     return (
       <Box
-        maxW="sm"
+        w="358px"
         borderWidth="1px"
         borderRadius="lg"
         overflow="hidden"
