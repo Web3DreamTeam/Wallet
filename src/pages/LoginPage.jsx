@@ -19,6 +19,7 @@ const LoginPage = () => {
   const handleLogin = async () => {
     let did = await registerOrLogin(username, password); // Replace with real username and password
     setDid(did)
+    localStorage.setItem('userDid', did);
     navigate('/home');
   };
 
