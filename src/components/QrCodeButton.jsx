@@ -17,6 +17,7 @@ const QRCodeButton = () => {
       <Text
         fontSize='4xl'
         as='b'
+        color="#E0E0E0"
         align='left'
         marginLeft='1.5rem'
         marginTop='1rem'
@@ -30,6 +31,7 @@ const QRCodeButton = () => {
         isRound // Making the button round
         float='right'
         marginLeft='12.5rem'
+        bg="#E0E0E0"
         marginTop='1rem'
         aria-label="Open QR Scanner" 
       />

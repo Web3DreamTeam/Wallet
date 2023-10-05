@@ -48,6 +48,7 @@ export const IssueCredential = ({request}) => {
                     align='left'
                     marginLeft='1.5rem'
                     marginTop='1rem'
+                    color="#E0E0E0"
                     font-family= '-apple-system-headline'
                 >Issuer</Text>
 
@@ -60,6 +61,7 @@ export const IssueCredential = ({request}) => {
                     align='left'
                     marginLeft='1.5rem'
                     marginTop='1rem'
+                    color="#E0E0E0"
                     font-family= '-apple-system-headline'
                 >Credential Preview</Text>
 

@@ -59,6 +59,7 @@ const CredentialHeader = (props) => {
       <Text
         onClick={props.handleBack}
         background="none"
+        color="#E0E0E0"
         fontSize='4xl'
         as='b'
         align='left'
@@ -77,6 +78,7 @@ const CredentialHeader = (props) => {
         float='right'
         marginLeft='13.5rem'
         marginTop='1rem'
+        bg="#E0E0E0"
         onClick={() => setIsOpen(true)}
       />
     </HStack>
