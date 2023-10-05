@@ -78,6 +78,7 @@ const PresentationRequest = ({ request }) => {
           fontSize="2xl"
           as="b"
           marginTop="1rem"
+          color="#E0E0E0"
           font-family="-apple-system-headline"
         >
           Verifier
@@ -93,6 +94,7 @@ const PresentationRequest = ({ request }) => {
           fontSize="2xl"
           as="b"
           marginTop="1rem"
+          color="#E0E0E0"
           font-family="-apple-system-headline"
         >
           Choose Credentials
@@ -103,7 +105,7 @@ const PresentationRequest = ({ request }) => {
             <Box key={type} width="full">
               <Text
                 bg="blue.500"
-                color="white"
+                color="#E0E0E0"
                 p={2}
                 textAlign="center"
                 onClick={() => handleCollapseToggle(type)}
@@ -127,7 +129,7 @@ const PresentationRequest = ({ request }) => {
           ))}
         </VStack>
         <Button
-          colorScheme="blue"
+          colorScheme="teal"
           onClick={handleSendPresentation}
           position="fixed"
           bottom="10"

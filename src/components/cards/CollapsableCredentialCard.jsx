@@ -81,11 +81,12 @@ const CollapsableCredentialCard = (props) => {
       minHeight={height}
       borderWidth="1px"
       borderRadius="lg"
+      borderColor="gray.600"
       overflow="hidden"
       p={4}
       shadow="xl"
       bgColor="gray.700"
-      color="white"
+      color="#E0E0E0"
       transform="perspective(500px) rotateX(2deg)"
       transition="transform 0.3s ease-in-out"
       _hover={{
@@ -97,6 +98,7 @@ const CollapsableCredentialCard = (props) => {
           fontSize="xl"
           fontWeight="bold"
           font-family="-apple-system-headline"
+          color="#E0E0E0"
         >
           {props.myCredential.cred.vc.type[1]}
         </Text>
@@ -124,7 +126,7 @@ const CollapsableCredentialCard = (props) => {
               aria-label="Toggle Fields"
               size="sm"
               variant="ghost"
-              color="white"
+              color="#E0E0E0"
               _hover={{ bg: "none" }}
               onClick={(e) => {
                 setShowAll(!showAll);
@@ -167,7 +169,7 @@ const HiddenField = ({ fieldName, fieldValue, isDisabled, addClaim }) => {
         icon={isVisible ? <ViewIcon /> : <ViewOffIcon />}
         onClick={handleEyeClick}
         variant="ghost"
-        color="white"
+        color="#E0E0E0"
         _hover={{ bg: "none" }}
         isDisabled={isDisabled}
       />

@@ -10,9 +10,8 @@ let defaultContext = {
 
 const AppContext = createContext(defaultContext);
 
-
 const AppContextProvider = ({children}) => {
-  const [did, setDid] = useState("")
+  const [did, setDid] = useState(localStorage.getItem('userDid') || "")
   const [credentials, setCredentials] = useState([])
   const [update, setUpdate] = useState(false)
 
