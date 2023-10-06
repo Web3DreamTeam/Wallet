@@ -1,10 +1,24 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Motivation
+
+User experience is one of the major driving factors behind mass adoption of technology. While great strides have been made in the SSI ecosystem in terms of technology, and we're starting to build out an ecosystem of wallets and products based on SSI our team feels more focus should be put on making this amazing, but complex, technology accessible and easy to use.
+
+We built a Wallet with extremely simple functionality which is familar to users who have experience with Apple Wallet and Google Wallet, making it easy for even novice users to utilise the technology. We abstract abstract concepts like DIDs, trust, and selective disclosure behind easy to understand UI/UX concepts that we hope will make the user's life easier.
+
+We recently saw a linkedIn post which perfectly summarises our motivation behind building our POC -
+
+
+`"AS A user I WANT TO take control of my identity SO THAT I can be free of the tyranny of the tech giants" Is not one a requirement for any of our target users.`
+
+## Running the project
 
 In the project directory, you can run:
 
-### `npm start`
+```
+npm install
+npm start
+```
 
 Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -12,57 +26,16 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
-### `npm test`
+## App flow
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+At the root route (e.g. http://localhost:3000/) you will be able to register/login to your cloud agent. By default, if you enter unknown set of credentials it will automatically register you with a new account. In a more fleshed out wallet, this would be replaced with a proper authentication and account flows.
 
-### `npm run build`
+After successfully logging in, you will be taken to the homepage (e.g. http://localhost:3000/home) where you can see all your credentials in a quick view, clicking on them to see a more detailed view of the credential subject and the issuer of the credentials.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+By clicking the QRCode button at the top right, you can scan proprietary QR codes produced by the Cloud Agent API. In a more fleshed out implementation, this would be using standardised protocols like OIDC4VC or OID4CI, but  we did not prioritise this implementation for our POC.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+Based on the QR code, you will be taken to the appropriate screen to either
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+a) Accept a credential being issued to you.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+b) Complete a credential presentation flow, where you can select which credentials to share and in the case of SD-JWTs, which fields to disclose to the verifier.
