@@ -1,15 +1,18 @@
 import { VStack, Button, Stack, Text, Center } from "@chakra-ui/react";
 import { saveCredential } from "../../utils/ssiService";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../AppContext";
 import jwt_decode from "jwt-decode";
 import ParticipantCard from "../cards/ParticipantCard";
 import CredentialCard from "../cards/CredentialCard";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
+import axios from "axios";
 
 export const IssueCredential = ({ request }) => {
   const { did, setUpdate } = useContext(AppContext);
+  const [verified, setVerified] = useState(false);
+  const [participantInfo, setParticipantInfo] = useState({});
   const toast = useToast();
   const navigate = useNavigate();
   const cred = jwt_decode(request.cred);
@@ -38,14 +41,33 @@ export const IssueCredential = ({ request }) => {
     });
   };
 
+  const getParticipantInfo = async (_did) => {
+    let res = await axios.get(
+      process.env.REACT_APP_CLOUD_API_IP +
+        "/trust-registry/participant?did=" +
+        _did +
+        "&type=" +
+        cred.vc.type[1] +
+        "&role=Issuer"
+    );
+
+    if (res.data) {
+      setVerified(true);
+      setParticipantInfo(res.data);
+    }
+  };
+
+  useEffect(() => {
+    getParticipantInfo(request.issuer);
+  }, []);
+
   return (
     <Center w="full" h="50rem">
       <VStack>
         <Text
           fontSize="2xl"
           as="b"
-          align="left"
-          marginLeft="1.5rem"
+          justifyContent="center"
           marginTop="1rem"
           font-family="-apple-system-headline"
           color="#E0E0E0"
@@ -55,15 +77,14 @@ export const IssueCredential = ({ request }) => {
 
         <ParticipantCard
           did={request.issuer}
-          role="Issuer"
-          type={cred.vc.type[1]}
+          verified={verified}
+          participantInfo={participantInfo}
         />
 
         <Text
           fontSize="2xl"
           as="b"
-          align="left"
-          marginLeft="1.5rem"
+          justifyContent="center"
           marginTop="1rem"
           font-family="-apple-system-headline"
           color="#E0E0E0"

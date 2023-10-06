@@ -58,6 +58,13 @@ const CredentialCards = (props) => {
     }
   };
 
+  const getZIndex = (index) => {
+    if (selectedCard === index) {
+      return 100;
+    }
+    return props.credentials.length - index;
+  };
+
   return (
     <Flex direction="column" align="center">
       {
@@ -88,7 +95,7 @@ const CredentialCards = (props) => {
               key={index}
               style={{
                 position: "absolute",
-                zIndex: props.credentials.length - index,
+                zIndex: getZIndex(index),
                 marginTop: calcMargin(index),
                 transition: "margin-top 0.4s ease",
               }}

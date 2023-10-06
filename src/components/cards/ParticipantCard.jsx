@@ -1,53 +1,53 @@
 // Import required components from Chakra UI
 import { Box, Text, VStack, HStack, Badge, Image } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 
 // CredentialIssuerCard component
-const ParticipantCard = ({ did, type, role }) => {
-  const [verified, setVerified] = useState(false);
-  const [name, setName] = useState("");
-  const [logo, setLogo] = useState("");
-
-  const getParticipantInfo = async (did) => {
-    let participantInfo = await axios.get(
-      process.env.REACT_APP_CLOUD_API_IP +
-        "/trust-registry/participant?did=" +
-        did +
-        "&type=" +
-        type +
-        "&role=" +
-        role
-    );
-
-    if (participantInfo.data) {
-      setVerified(true);
-      participantInfo = participantInfo.data;
-      setName(participantInfo.name);
-      setLogo(participantInfo.logo);
-    }
-  };
-
-  useEffect(() => {
-    getParticipantInfo(did);
-  }, []);
+const ParticipantCard = ({ did, verified, participantInfo }) => {
+  console.log(did);
+  console.log(participantInfo);
 
   return (
     <Box
-      w="358px"
-      borderWidth="1px"
+      w="100%"
+      alignSelf="center"
       borderRadius="lg"
       overflow="hidden"
       p={4}
       shadow="lg"
+      color="#E0E0E0"
+      bgColor="gray.700"
     >
       <VStack spacing={2} align="start">
-        <HStack spacing={2}>
-          <Text fontSize="lg" fontWeight="bold">
-            DID:
-          </Text>
-          <Text fontSize="lg">{did}</Text>
-        </HStack>
+        {!verified ? (
+          <HStack spacing={2}>
+            <Text fontSize="lg" fontWeight="bold">
+              DID:
+            </Text>
+            <Text fontSize="lg">
+              {did.split(":").pop().slice(0, 6) +
+                "..." +
+                did.split(":").pop().slice(-6)}
+            </Text>
+          </HStack>
+        ) : (
+          <HStack
+            spacing={2}
+            justifyContent="space-between"
+            alignContent="center"
+            w="100%"
+          >
+            <Text fontSize="lg" maxWidth={"70%"}>
+              {participantInfo?.name}
+            </Text>
+            <Image
+              boxSize="32px"
+              objectFit="cover"
+              src={participantInfo?.logo}
+              alt="Dan Abramov"
+            />
+          </HStack>
+        )}
         <HStack spacing={2}>
           <Text fontSize="lg" fontWeight="bold">
             Verified:
@@ -56,27 +56,7 @@ const ParticipantCard = ({ did, type, role }) => {
             {verified ? "Yes" : "No"}
           </Badge>
         </HStack>
-        {verified && (
-          <>
-            <HStack spacing={2}>
-              <Text fontSize="lg" fontWeight="bold">
-                Name:
-              </Text>
-              <Text fontSize="lg">{name}</Text>
-            </HStack>
-            <HStack spacing={2}>
-              <Text fontSize="lg" fontWeight="bold">
-                Logo:
-              </Text>
-              <Image
-                boxSize="32px"
-                objectFit="cover"
-                src={logo}
-                alt="Dan Abramov"
-              />
-            </HStack>
-          </>
-        )}
+        {verified && <></>}
       </VStack>
     </Box>
   );

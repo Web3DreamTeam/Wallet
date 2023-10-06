@@ -5,7 +5,6 @@ import {
   Flex,
   VStack,
   IconButton,
-  Tooltip,
   Circle,
   HStack,
 } from "@chakra-ui/react";
@@ -16,11 +15,14 @@ import {
   ViewOffIcon,
 } from "@chakra-ui/icons";
 import ParticipantCard from "./ParticipantCard";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 // WalletCard component
 const CollapsableCredentialCard = (props) => {
   const [showAll, setShowAll] = useState(false);
+  const [verified, setVerified] = useState(false);
+  const [participantInfo, setParticipantInfo] = useState({});
 
   if (!props.isSelected && showAll) setShowAll(false);
 
@@ -30,6 +32,26 @@ const CollapsableCredentialCard = (props) => {
     width = "320px";
     height = "202px";
   }
+
+  const getParticipantInfo = async (did) => {
+    let res = await axios.get(
+      process.env.REACT_APP_CLOUD_API_IP +
+        "/trust-registry/participant?did=" +
+        did +
+        "&type=" +
+        props.myCredential.cred.vc.type[1] +
+        "&role=Issuer"
+    );
+
+    if (res.data) {
+      setVerified(true);
+      setParticipantInfo(res.data);
+    }
+  };
+
+  useEffect(() => {
+    getParticipantInfo(props.myCredential.cred.iss);
+  }, []);
 
   const fields = Object.keys(props.myCredential.cred.vc.credentialSubject).map(
     (key, index) => {
@@ -74,6 +96,34 @@ const CollapsableCredentialCard = (props) => {
     </Text>
   );
 
+  fields.push(
+    <>
+      <Text
+        fontSize="l"
+        fontWeight="bold"
+        font-family="-apple-system-headline"
+        color="#E0E0E0"
+      >
+        Issued By:
+      </Text>
+      <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+        <Box
+          borderWidth="1px"
+          borderRadius="lg"
+          color="#E0E0E0"
+          justifyContent="center"
+          w="90%"
+        >
+          <ParticipantCard
+            did={props.myCredential.cred.iss}
+            verified={verified}
+            participantInfo={participantInfo}
+          />
+        </Box>
+      </div>
+    </>
+  );
+
   return (
     <Box
       maxW="md"
@@ -94,30 +144,19 @@ const CollapsableCredentialCard = (props) => {
       }}
     >
       <VStack spacing={4} align="start">
-        <Text
-          fontSize="xl"
-          fontWeight="bold"
-          font-family="-apple-system-headline"
-          color="#E0E0E0"
-        >
-          {props.myCredential.cred.vc.type[1]}
-        </Text>
-
-        <Box position="absolute" right="2" top="2">
-          <Tooltip
-            label={
-              <ParticipantCard
-                did={props.myCredential.cred.iss}
-                role="Issuer"
-                type={props.myCredential.cred.vc.type[1]}
-              />
-            }
-            placement="left-start"
-            hasArrow
+        <HStack justifyContent="space-between" w="100%">
+          <Text
+            fontSize="xl"
+            fontWeight="bold"
+            font-family="-apple-system-headline"
+            color="#E0E0E0"
           >
-            <Circle size="20px" bg={"green.500"} />
-          </Tooltip>
-        </Box>
+            {props.myCredential.cred.vc.type[1]}
+          </Text>
+
+          <Circle size="20px" bg={verified ? "green.500" : "red.500"} />
+        </HStack>
+
         {showAll ? fields : fields.slice(0, 2)}
 
         {props.isSelected ? (
