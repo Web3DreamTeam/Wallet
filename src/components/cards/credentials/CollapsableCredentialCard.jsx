@@ -5,7 +5,6 @@ import {
   Flex,
   VStack,
   IconButton,
-  Circle,
   HStack,
 } from "@chakra-ui/react";
 import {
@@ -14,15 +13,13 @@ import {
   ViewIcon,
   ViewOffIcon,
 } from "@chakra-ui/icons";
-import ParticipantCard from "./ParticipantCard";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import ParticipantCard from "../participants/ParticipantCard";
+import React, { useState } from "react";
 
 // WalletCard component
 const CollapsableCredentialCard = (props) => {
   const [showAll, setShowAll] = useState(false);
-  const [verified, setVerified] = useState(false);
-  const [participantInfo, setParticipantInfo] = useState({});
+  // const [verified, setVerified] = useState(false);
 
   if (!props.isSelected && showAll) setShowAll(false);
 
@@ -33,25 +30,6 @@ const CollapsableCredentialCard = (props) => {
     height = "202px";
   }
 
-  const getParticipantInfo = async (did) => {
-    let res = await axios.get(
-      process.env.REACT_APP_CLOUD_API_IP +
-        "/trust-registry/participant?did=" +
-        did +
-        "&type=" +
-        props.myCredential.cred.vc.type[1] +
-        "&role=Issuer"
-    );
-
-    if (res.data) {
-      setVerified(true);
-      setParticipantInfo(res.data);
-    }
-  };
-
-  useEffect(() => {
-    getParticipantInfo(props.myCredential.cred.iss);
-  }, []);
 
   const fields = Object.keys(props.myCredential.cred.vc.credentialSubject).map(
     (key, index) => {
@@ -116,8 +94,9 @@ const CollapsableCredentialCard = (props) => {
         >
           <ParticipantCard
             did={props.myCredential.cred.iss}
-            verified={verified}
-            participantInfo={participantInfo}
+            role={"Issuer"}
+            type={props.myCredential.cred.vc.type[1]}
+            // _setVerified={setVerified}
           />
         </Box>
       </div>
@@ -154,7 +133,7 @@ const CollapsableCredentialCard = (props) => {
             {props.myCredential.cred.vc.type[1]}
           </Text>
 
-          <Circle size="20px" bg={verified ? "green.500" : "red.500"} />
+          {/* <Circle size="20px" bg={verified ? "green.500" : "red.500"} /> */}
         </HStack>
 
         {showAll ? fields : fields.slice(0, 2)}

@@ -1,18 +1,15 @@
 import { VStack, Button, Stack, Text, Center } from "@chakra-ui/react";
 import { saveCredential } from "../../utils/ssiService";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { AppContext } from "../../AppContext";
 import jwt_decode from "jwt-decode";
-import ParticipantCard from "../cards/ParticipantCard";
-import CredentialCard from "../cards/CredentialCard";
+import ParticipantCard from "../cards/participants/ParticipantCard";
+import CredentialCard from "../cards/credentials/CredentialCard";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
-import axios from "axios";
 
 export const IssueCredential = ({ request }) => {
   const { did, setUpdate } = useContext(AppContext);
-  const [verified, setVerified] = useState(false);
-  const [participantInfo, setParticipantInfo] = useState({});
   const toast = useToast();
   const navigate = useNavigate();
   const cred = jwt_decode(request.cred);
@@ -41,26 +38,6 @@ export const IssueCredential = ({ request }) => {
     });
   };
 
-  const getParticipantInfo = async (_did) => {
-    let res = await axios.get(
-      process.env.REACT_APP_CLOUD_API_IP +
-        "/trust-registry/participant?did=" +
-        _did +
-        "&type=" +
-        cred.vc.type[1] +
-        "&role=Issuer"
-    );
-
-    if (res.data) {
-      setVerified(true);
-      setParticipantInfo(res.data);
-    }
-  };
-
-  useEffect(() => {
-    getParticipantInfo(request.issuer);
-  }, []);
-
   return (
     <Center w="full" h="50rem">
       <VStack>
@@ -77,8 +54,8 @@ export const IssueCredential = ({ request }) => {
 
         <ParticipantCard
           did={request.issuer}
-          verified={verified}
-          participantInfo={participantInfo}
+          type={cred.vc.type[1]}
+          role={"Issuer"}
         />
 
         <Text

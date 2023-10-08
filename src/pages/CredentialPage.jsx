@@ -1,5 +1,5 @@
 import QRCodeButton from '../components/QrCodeButton';
-import CredentialCards from '../components/cards/CredentialCards';
+import CredentialCards from '../components/cards/credentials/CredentialCards';
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../AppContext';
 import { RequireDid } from '../utils/RequireDid';

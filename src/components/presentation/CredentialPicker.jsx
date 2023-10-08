@@ -1,6 +1,6 @@
 import React from 'react';
 import { Checkbox, Box, HStack } from '@chakra-ui/react';
-import CollapsableCredentialCard from '../cards/CollapsableCredentialCard';
+import CollapsableCredentialCard from '../cards/credentials/CollapsableCredentialCard';
 
 const CredentialPicker = ({ credential, onToggle, handleAddClaim, isChecked }) => {
 

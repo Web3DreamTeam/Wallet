@@ -1,15 +1,39 @@
 // Import required components from Chakra UI
 import { Box, Text, VStack, HStack, Badge, Image } from "@chakra-ui/react";
-import React from "react";
+import React, {useState, useEffect} from "react";
+import axios from "axios"
 
 // CredentialIssuerCard component
-const ParticipantCard = ({ did, verified, participantInfo }) => {
-  console.log(did);
-  console.log(participantInfo);
+const ParticipantCard = ({ did, type, role, _setVerified, w="100%" }) => {
+
+  const [verified, setVerified] = useState(false);
+  const [participantInfo, setParticipantInfo] = useState({});
+
+  const getParticipantInfo = async (_did) => {
+    let res = await axios.get(
+      process.env.REACT_APP_CLOUD_API_IP +
+        "/trust-registry/participant?did=" +
+        _did +
+        "&type=" +
+        type +
+        "&role=" +
+        role
+    );
+
+    if (res.data) {
+      setVerified(true);
+      if(_setVerified !== undefined) _setVerified(true);
+      setParticipantInfo(res.data);
+    }
+  };
+
+  useEffect(() => {
+    getParticipantInfo(did);
+  }, []);
 
   return (
     <Box
-      w="100%"
+      w={w}
       alignSelf="center"
       borderRadius="lg"
       overflow="hidden"

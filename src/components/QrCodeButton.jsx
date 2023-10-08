@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IconButton, HStack, Text } from '@chakra-ui/react';
 import { FaQrcode } from 'react-icons/fa';
+import { AppContext } from '../AppContext';
 
 const QRCodeButton = () => {
   const navigate = useNavigate();
+  const { setUpdate } = useContext(AppContext);
 
   const navigateToScan = () => {
     navigate('/scan');
@@ -22,6 +24,7 @@ const QRCodeButton = () => {
         marginLeft='1.5rem'
         marginTop='1rem'
         font-family= '-apple-system-headline'
+        onClick={() => setUpdate(upd => !upd)}
       >Wallet</Text>
 
 

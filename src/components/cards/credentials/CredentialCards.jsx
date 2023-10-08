@@ -3,9 +3,9 @@ import { useState, useContext } from "react";
 import React from "react";
 import CollapsableCredentialCard from "./CollapsableCredentialCard";
 import { Flex } from "@chakra-ui/react";
-import { AppContext } from "../../AppContext";
-import CredentialHeader from "../CredentialHeader";
-import { deleteCredential as delCred } from "../../utils/ssiService";
+import { AppContext } from "../../../AppContext";
+import CredentialHeader from "../../CredentialHeader";
+import { deleteCredential as delCred } from "../../../utils/ssiService";
 
 // WalletCards component
 const CredentialCards = (props) => {

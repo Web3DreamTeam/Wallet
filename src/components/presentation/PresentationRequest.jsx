@@ -1,8 +1,9 @@
 import React, { useContext, useState } from "react";
 import { AppContext } from "../../AppContext";
-import { Box, Button, VStack, Text, Collapse, Center } from "@chakra-ui/react";
+import { Box, Button, VStack, Text, Collapse, Center, Flex, Spacer } from "@chakra-ui/react";
 import CredentialPickers from "./CredentialPickers";
-import ParticipantCard from "../cards/ParticipantCard";
+import VerifiedParticipantCard from "../cards/participants/VerifiedParticipantCard";
+import TitleParticipantCard from "../cards/participants/TitleParticipantCard"
 import { handlePresentationSubmission } from "../../utils/ssiService";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
@@ -71,6 +72,8 @@ const PresentationRequest = ({ request }) => {
     });
   };
 
+  
+
   return (
     <Center w="full" h="full">
       <VStack>
@@ -84,11 +87,13 @@ const PresentationRequest = ({ request }) => {
           Verifier
         </Text>
 
-        <ParticipantCard
-          did={request.verifier}
-          role="Verifier"
-          type={credentials[0].cred.vc.type[1]}
-        />
+        <TitleParticipantCard
+                      did={request.verifier}
+                      role={"Verifier"}
+                      w={"80%"}
+                  />
+
+        
 
         <Text
           fontSize="2xl"
@@ -100,24 +105,42 @@ const PresentationRequest = ({ request }) => {
           Choose Credentials
         </Text>
 
-        <VStack spacing={4} pb={24}>
+        <VStack spacing={4} pb={24} w={"100vw"}>
           {Object.keys(credentialsByType).map((type) => (
             <Box key={type} width="full">
+              <Flex onClick={() => handleCollapseToggle(type)} bg="gray.700" align="center" >
               <Text
-                bg="blue.500"
+                ml="1rem"
+                as="b"
                 color="#E0E0E0"
                 p={2}
-                textAlign="center"
-                onClick={() => handleCollapseToggle(type)}
                 cursor="pointer"
               >
                 {type}
               </Text>
+              <Spacer/>
+              <Box mr="1rem">
+                  <VerifiedParticipantCard
+                      did={request.verifier}
+                      role={"Verifier"}
+                      type={type}
+                      w={"100%"}
+                      
+                  />
+                </Box>
+
+
+              </Flex>
+              
+              
               <Collapse
                 in={show[type] !== false}
-                startingHeight={20}
+                startingHeight={0}
                 animateOpacity
+            
               >
+                
+                
                 <CredentialPickers
                   credentials={credentialsByType[type]}
                   onToggle={handleToggle}
@@ -128,6 +151,7 @@ const PresentationRequest = ({ request }) => {
             </Box>
           ))}
         </VStack>
+
         <Button
           colorScheme="teal"
           onClick={handleSendPresentation}
