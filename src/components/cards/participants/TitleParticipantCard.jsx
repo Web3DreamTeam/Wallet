@@ -1,32 +1,33 @@
 // Import required components from Chakra UI
 import { Box, Text, VStack, HStack, Image } from "@chakra-ui/react";
-import React, {useState, useEffect} from "react";
-import axios from "axios"
+import React, { useState } from "react";
+// import axios from "axios";
 
 // CredentialIssuerCard component
-const TitleParticipantCard = ({ did, type, role, w="100%" }) => {
-  const [verified, setVerified] = useState(false);
-  const [participantInfo, setParticipantInfo] = useState({});
+const TitleParticipantCard = ({ did, w = "100%" }) => {
+  const [verified] = useState(false);
+  const [participantInfo] = useState({});
 
-  const getParticipantInfo = async (_did) => {
-    let query = process.env.REACT_APP_CLOUD_API_IP +
-    "/trust-registry/participant?did=" +
-    _did +
-    "&role=" +
-    role
+  // const getParticipantInfo = async (_did) => {
+  //   let query =
+  //     process.env.REACT_APP_CLOUD_API_IP +
+  //     "/trust-registry/participant?did=" +
+  //     _did +
+  //     "&role=" +
+  //     role;
 
-    if (type !== undefined) query += "&type=" + type
-    let res = await axios.get(query);
+  //   if (type !== undefined) query += "&type=" + type;
+  //   let res = await axios.get(query);
 
-    if (res.data) {
-      setVerified(true);
-      setParticipantInfo(res.data);
-    }
-  };
+  //   if (res.data) {
+  //     setVerified(true);
+  //     setParticipantInfo(res.data);
+  //   }
+  // };
 
-  useEffect(() => {
-    getParticipantInfo(did);
-  }, []);
+  // useEffect(() => {
+  //   getParticipantInfo(did);
+  // }, []);
 
   return (
     <Box
