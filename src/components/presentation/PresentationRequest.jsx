@@ -23,7 +23,7 @@ const PresentationRequest = ({ request }) => {
   });
 
   const [selectedCredentials, setSelectedCredentials] = useState([]);
-  const [claims, setClaims] = useState([]);
+  const [claims, setClaims] = useState({});
   const [show, setShow] = useState({});
 
   const handleToggle = (credential) => {
@@ -31,18 +31,30 @@ const PresentationRequest = ({ request }) => {
       if (prevSelected.includes(credential)) {
         return prevSelected.filter((cred) => cred !== credential);
       } else {
+        claims[credential.jwt] = []
         return [...prevSelected, credential];
       }
     });
   };
 
-  const handleAddClaim = (claim) => {
-    if (claims.includes(claim)) {
-      setClaims(claims.filter((existingItem) => existingItem !== claim));
-    } else {
-      setClaims([...claims, claim]);
+  const handleAddClaim = (vc, claim) => {
+
+    let vcClaims = claims[vc]
+    if (vcClaims === undefined){
+      vcClaims = []
     }
-    console.log(claims);
+    if (vcClaims.includes(claim)) {
+      setClaims(prevClaims => ({
+        ...prevClaims,
+        [vc]: vcClaims.filter((existingItem) => existingItem !== claim)
+      }))
+    } else {
+      setClaims(prevClaims => ({
+        ...prevClaims,
+        [vc]: [...vcClaims, claim]
+      }));
+    }
+    console.log(vcClaims);
   };
 
   const handleCollapseToggle = (type) => {
@@ -52,15 +64,26 @@ const PresentationRequest = ({ request }) => {
     }));
   };
 
+  const titleToCamelCase = (str) => {
+    console.log(str)
+    return str
+        .replace(/^./, firstChar => firstChar.toLowerCase())
+        .replace(/ (\w)/g, (_, charAfterSpace) => charAfterSpace.toUpperCase());
+  }
+
+
   const handleSendPresentation = async () => {
     //props.request.id
     console.log("Selected Credentials:", selectedCredentials);
     console.log("Selected Claims: ", claims);
+    let selectedJwts = selectedCredentials.map((cred) => cred.jwt)
+    let claimsArray = selectedJwts.map((jwt) => claims[jwt] || [])
+    console.log(claimsArray)
     await handlePresentationSubmission(
       did,
       request,
-      selectedCredentials.map((cred) => cred.jwt),
-      claims
+      selectedJwts,
+      claimsArray.map((claim) => claim.map(titleToCamelCase))
     );
     navigate("/home");
     toast({

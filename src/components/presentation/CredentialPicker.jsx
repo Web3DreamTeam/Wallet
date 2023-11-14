@@ -5,6 +5,11 @@ import CollapsableCredentialCard from '../cards/credentials/CollapsableCredentia
 const CredentialPicker = ({ credential, onToggle, handleAddClaim, isChecked }) => {
 
 
+  const innerHandleAddClaim = (claim) => {
+    console.log(credential.jwt, claim)
+    handleAddClaim(credential.jwt, claim)
+  }
+
   return (
 
       <HStack>
@@ -13,7 +18,7 @@ const CredentialPicker = ({ credential, onToggle, handleAddClaim, isChecked }) =
           <CollapsableCredentialCard
             myCredential={credential}
             isSelected={true}
-            addClaim={handleAddClaim}
+            addClaim={innerHandleAddClaim}
             presentation={true}
           />
         </Box>
